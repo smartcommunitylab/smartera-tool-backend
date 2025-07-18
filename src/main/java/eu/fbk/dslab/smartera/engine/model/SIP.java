@@ -19,9 +19,10 @@ public class SIP {
     public SIP() {
     }
 
-    public SIP(String id, String owner, Map<String, Object> body) {
+    public SIP(String id, String owner, String inviteCode, Map<String, Object> body) {
         this.id = id;
         this.owner = owner;
+        this.inviteCode = inviteCode;
         this.body = body;
     }
 

@@ -53,10 +53,11 @@ public class SIPController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> createEntity(
         @RequestParam String id,
+        @RequestParam String inviteCode,
         @RequestBody Map<String, Object> body, 
         HttpServletRequest request) {
             String owner = UserContext.getOwner(request);
-            SIP sip = sipService.save(owner, id, body);
+            SIP sip = sipService.save(owner, id, inviteCode, body);
             return ResponseEntity.ok().body(sip.getBody());
     }
 
@@ -66,8 +67,22 @@ public class SIPController {
         Map<String, Object> body, 
         HttpServletRequest request) {
             String owner = UserContext.getOwner(request);
-            SIP sip = sipService.save(owner, id, body);
+            SIP sip = sipService.save(owner, id, null, body);
             return ResponseEntity.ok().body(sip.getBody());
+    }
+
+    @PutMapping("/{id}/invite-code")
+    public ResponseEntity<Void> updateInviteCode(
+        @PathVariable String id, 
+        @RequestParam String inviteCode, 
+        HttpServletRequest request) {
+        String owner = UserContext.getOwner(request);
+        try {
+            sipService.updateInvitationCode(owner, id, inviteCode);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -1,0 +1,38 @@
+package eu.fbk.dslab.smartera.engine.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import eu.fbk.dslab.smartera.engine.model.Like;
+import eu.fbk.dslab.smartera.engine.service.LikeService;
+import eu.fbk.security.UserContext;
+import jakarta.servlet.http.HttpServletRequest;
+
+@RestController
+@RequestMapping("/api/like")
+public class LikeController {
+
+    @Autowired
+    LikeService likeService;
+
+    @GetMapping("/sip/{sipId}")
+    public ResponseEntity<List<Like>> getLike(@PathVariable String sipId, HttpServletRequest request) {
+        String owner = UserContext.getOwner(request);
+        List<Like> likes = likeService.getLikesByOwnerAndSipId(owner, sipId);
+        return ResponseEntity.ok().body(likes);
+    }
+
+    @PutMapping("/sip/{sipId}")
+    public ResponseEntity<Like> addSipLike(@PathVariable String sipId, HttpServletRequest request) {
+        String owner = UserContext.getOwner(request);
+        Like like = likeService.addSipLike(owner, sipId);
+        return ResponseEntity.ok().body(like);
+    }
+}

@@ -46,13 +46,29 @@ public class SIPService {
         return sipRepository.findById(id);
     }
 
-    public SIP save(String owner, String id, Map<String, Object> body) throws IllegalArgumentException {
+    public SIP save(String owner, String id, String inviteCode, Map<String, Object> body) throws IllegalArgumentException {
         SIP sip = sipRepository.findById(id).orElse(null);
         if (sip != null && !sip.getOwner().equals(owner)) {
             throw new IllegalArgumentException("You do not have permission to modify this entity.");
         }
-        SIP entity = new SIP(id, owner, body);
-        return sipRepository.save(entity);
+        if (sip == null) {  
+            sip = new SIP(id, owner, inviteCode, body);
+        } else {
+            sip.setBody(body);
+        }
+        return sipRepository.save(sip);
+    }
+
+    public SIP updateInvitationCode(String owner, String id, String inviteCode) throws IllegalArgumentException {
+        SIP sip = sipRepository.findById(id).orElse(null);
+        if (sip != null && !sip.getOwner().equals(owner)) {
+            throw new IllegalArgumentException("You do not have permission to modify this entity.");
+        }
+        if (sip == null) {
+            throw new IllegalArgumentException("SIP entity not found.");
+        }
+        sip.setInviteCode(inviteCode);
+        return sipRepository.save(sip);
     }
 
     public boolean deleteById(String owner, String id) throws IllegalArgumentException {
