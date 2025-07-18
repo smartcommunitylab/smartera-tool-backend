@@ -24,4 +24,11 @@ public class InviteService {
             return existingInvite; // Return existing invite if it already exists
         }
     }
+
+    public void deleteInvite(String owner, String sipId, String invitedUser) {
+        Invite existingInvite = inviteRepository.findByOwnerAndSipIdAndInvitedUser(owner, sipId, invitedUser);
+        if (existingInvite != null) {
+            inviteRepository.delete(existingInvite);
+        }
+    }
 }

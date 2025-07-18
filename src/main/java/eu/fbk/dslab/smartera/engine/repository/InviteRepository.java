@@ -11,7 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface InviteRepository extends MongoRepository<Invite, String> {
     // Puoi aggiungere metodi di query personalizzati qui
     List<Invite> findByOwnerAndSipId(String owner, String sipId);
+    List<Invite> findByInvitedUser(String invitedUser);
     Invite findByOwnerAndSipIdAndInvitedUser(String owner, String sipId, String invitedUser);
     Invite findBySipIdAndInvitedUser(String sipId, String invitedUser);
 
+    void deleteBySipId(String sipId);
 }
