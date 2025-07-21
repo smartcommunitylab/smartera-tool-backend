@@ -17,8 +17,7 @@ public class UserPrefs {
     public UserPrefs() {
     }
 
-    public UserPrefs(String id, String owner, Map<String, Object> body) {
-        this.id = id;
+    public UserPrefs(String owner, Map<String, Object> body) {
         this.owner = owner;
         this.body = body;
     }

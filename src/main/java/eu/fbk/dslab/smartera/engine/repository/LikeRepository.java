@@ -12,7 +12,7 @@ public interface LikeRepository extends MongoRepository<Like, String> {
     List<Like> findBySipId(String sipId);
     List<Like> findByOwnerAndSipId(String owner, String sipId);
     Like findOneByOwnerAndSipIdAndComponentId(String owner, String sipId, String componentId);
-    Like findByOwnerAndSipIdAndComponentIdNull(String owner, String sipId);
+    Like findOneByOwnerAndSipIdAndComponentIdNull(String owner, String sipId);
 
     void deleteBySipId(String sipId);
 }

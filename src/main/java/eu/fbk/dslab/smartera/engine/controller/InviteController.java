@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,19 @@ public class InviteController {
         String owner = UserContext.getOwner(request);
         List<Invite> invites = inviteService.findByOwner(owner);
         return ResponseEntity.ok().body(invites);
+    }
+
+    @PutMapping("/accept")
+    public ResponseEntity<Invite> acceptInvite(
+        @RequestParam String inviteCode, 
+        HttpServletRequest request) {
+            String invitedUser = UserContext.getOwner(request);
+            try {
+                Invite invite = inviteService.saveInvite(inviteCode, invitedUser);
+                return ResponseEntity.ok().body(invite);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().build();
+            }
     }
 
     @DeleteMapping("/")

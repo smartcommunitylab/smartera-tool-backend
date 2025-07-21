@@ -22,10 +22,17 @@ public class LikeController {
     @Autowired
     LikeService likeService;
 
-    @GetMapping("/sip/{sipId}")
-    public ResponseEntity<List<Like>> getLike(@PathVariable String sipId, HttpServletRequest request) {
+    @GetMapping("/sip/{sipId}/owner")
+    public ResponseEntity<List<Like>> getLikeByOwner(@PathVariable String sipId, HttpServletRequest request) {
         String owner = UserContext.getOwner(request);
-        List<Like> likes = likeService.getLikesByOwnerAndSipId(owner, sipId);
+        List<Like> likes = likeService.getLikesBySIPOwner(owner, sipId);
+        return ResponseEntity.ok().body(likes);
+    }
+
+    @GetMapping("/sip/{sipId}")
+    public ResponseEntity<List<Like>> getLikes(@PathVariable String sipId, HttpServletRequest request) {
+        String owner = UserContext.getOwner(request);
+        List<Like> likes = likeService.getLikes(owner, sipId);
         return ResponseEntity.ok().body(likes);
     }
 
@@ -35,4 +42,15 @@ public class LikeController {
         Like like = likeService.addSipLike(owner, sipId);
         return ResponseEntity.ok().body(like);
     }
+
+    @PutMapping("/sip/{sipId}/component/{componentId}")
+    public ResponseEntity<Like> addSipLike(
+        @PathVariable String sipId, 
+        @PathVariable String componentId,
+        HttpServletRequest request) {
+        String owner = UserContext.getOwner(request);
+        Like like = likeService.addComponentLike(owner, sipId, componentId);
+        return ResponseEntity.ok().body(like);
+    }
+
 }

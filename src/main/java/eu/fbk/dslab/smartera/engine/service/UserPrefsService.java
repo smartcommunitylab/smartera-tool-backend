@@ -21,22 +21,20 @@ public class UserPrefsService {
         return entityRepository.findOneByOwner(owner);
     }
 
-    public UserPrefs save(String owner, String id, Map<String, Object> body) throws IllegalArgumentException {
-        UserPrefs prefs = entityRepository.findById(id).orElse(null);
-        if (prefs != null && !prefs.getOwner().equals(owner)) {
-            throw new IllegalArgumentException("You do not have permission to modify this entity.");
+    public UserPrefs save(String owner, Map<String, Object> body) {
+        UserPrefs prefs = entityRepository.findOneByOwner(owner);
+        if (prefs == null) {
+            prefs = new UserPrefs(owner, body);
+        } else {
+            prefs.setBody(body);    
         }
-        UserPrefs entity = new UserPrefs(id, owner, body);
-        return entityRepository.save(entity);
+        return entityRepository.save(prefs);
     }
 
-    public void deleteById(String owner, String id) throws IllegalArgumentException {
-        UserPrefs entity = entityRepository.findById(id).orElse(null);
+    public void deleteByOwner(String owner) {
+        UserPrefs entity = entityRepository.findOneByOwner(owner);
         if (entity !=  null) {
-            if (!entity.getOwner().equals(owner)) {
-                throw new IllegalArgumentException("You do not have permission to delete this entity.");
-            }
-            entityRepository.deleteById(id);
+            entityRepository.deleteById(entity.getId());
         }
     }
 }

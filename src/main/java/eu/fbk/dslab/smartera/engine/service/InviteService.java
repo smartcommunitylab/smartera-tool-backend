@@ -22,7 +22,7 @@ public class InviteService {
         this.sipRepository = sipRepository;
     }
     
-    public Invite saveInvite(String inviteCode, String invitedUser) {
+    public Invite saveInvite(String inviteCode, String invitedUser) throws IllegalArgumentException {
         SIP sip = sipRepository.findOneByInviteCode(inviteCode);
         if (sip == null) {
             throw new IllegalArgumentException("SIP entity not found.");
