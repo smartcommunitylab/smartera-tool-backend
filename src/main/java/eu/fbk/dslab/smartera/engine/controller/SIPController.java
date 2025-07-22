@@ -64,7 +64,7 @@ public class SIPController {
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateEntity(
         @PathVariable String id, 
-        Map<String, Object> body, 
+        @RequestBody Map<String, Object> body, 
         HttpServletRequest request) {
             String owner = UserContext.getOwner(request);
             SIP sip = sipService.save(owner, id, null, body);
