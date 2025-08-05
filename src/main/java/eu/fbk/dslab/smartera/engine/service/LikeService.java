@@ -1,7 +1,6 @@
 package eu.fbk.dslab.smartera.engine.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

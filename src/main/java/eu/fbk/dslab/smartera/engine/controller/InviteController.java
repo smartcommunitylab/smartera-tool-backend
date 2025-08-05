@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,14 @@ public class InviteController {
     public ResponseEntity<List<Invite>> getMyInvites(HttpServletRequest request) {
         String owner = UserContext.getOwner(request);
         List<Invite> invites = inviteService.findByOwner(owner);
+        return ResponseEntity.ok().body(invites);
+    }
+
+    @GetMapping("/sip/{id}")
+    public ResponseEntity<List<Invite>> getSipInvites(@PathVariable String id,
+        HttpServletRequest request) {
+        String owner = UserContext.getOwner(request);
+        List<Invite> invites = inviteService.findByOwnerAndSip(owner, id);
         return ResponseEntity.ok().body(invites);
     }
 

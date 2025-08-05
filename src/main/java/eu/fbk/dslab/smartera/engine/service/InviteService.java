@@ -40,6 +40,10 @@ public class InviteService {
         return inviteRepository.findByOwner(owner);
     }
 
+    public List<Invite> findByOwnerAndSip(String owner, String sipId) {
+        return inviteRepository.findByOwnerAndSipId(owner, sipId);
+    }
+
     public void deleteInvite(String owner, String sipId, String invitedUser) {
         Invite existingInvite = inviteRepository.findByOwnerAndSipIdAndInvitedUser(owner, sipId, invitedUser);
         if (existingInvite != null) {
