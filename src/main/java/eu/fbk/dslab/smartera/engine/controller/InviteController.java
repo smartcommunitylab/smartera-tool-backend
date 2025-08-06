@@ -52,7 +52,7 @@ public class InviteController {
             }
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping()
     public ResponseEntity<Void> deleteInvite(
         @RequestParam String sipId, 
         @RequestParam String invitedUser, 
