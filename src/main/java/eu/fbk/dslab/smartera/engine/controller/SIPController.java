@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import eu.fbk.dslab.smartera.engine.model.SIP;
 import eu.fbk.dslab.smartera.engine.service.SIPService;
 import eu.fbk.security.UserContext;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +20,9 @@ public class SIPController {
     private SIPService sipService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getEntityById(@PathVariable String id,
-        HttpServletRequest request) {
-        Optional<SIP> op = sipService.findById(UserContext.getOwner(request), id);
+    public ResponseEntity<Map<String, Object>> getEntityById(
+            @PathVariable String id) {
+        Optional<SIP> op = sipService.findById(UserContext.getOwner(), id);
         if (op.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -31,8 +30,8 @@ public class SIPController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<Map<String, Object>>> getByOwner(HttpServletRequest request) {
-        String owner = UserContext.getOwner(request);
+    public ResponseEntity<List<Map<String, Object>>> getByOwner() {
+        String owner = UserContext.getOwner();
         List<SIP> sips = sipService.findByOwner(owner);
         List<Map<String, Object>> response = sips.stream()
             .map(SIP::getBody)
@@ -41,8 +40,8 @@ public class SIPController {
     }
 
     @GetMapping("/invited")
-    public ResponseEntity<List<Map<String, Object>>> getByInvitedUser(HttpServletRequest request) {
-        String owner = UserContext.getOwner(request);
+    public ResponseEntity<List<Map<String, Object>>> getByInvitedUser() {
+        String owner = UserContext.getOwner();
         List<SIP> sips = sipService.findByInvitedUser(owner);
         List<Map<String, Object>> response = sips.stream()
             .map(SIP::getBody)
@@ -52,31 +51,28 @@ public class SIPController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> createEntity(
-        @RequestParam String id,
-        @RequestParam String inviteCode,
-        @RequestBody Map<String, Object> body, 
-        HttpServletRequest request) {
-            String owner = UserContext.getOwner(request);
-            SIP sip = sipService.save(owner, id, inviteCode, body);
-            return ResponseEntity.ok().body(sip.getBody());
+            @RequestParam String id,
+            @RequestParam String inviteCode,
+            @RequestBody Map<String, Object> body) {
+        String owner = UserContext.getOwner();
+        SIP sip = sipService.save(owner, id, inviteCode, body);
+        return ResponseEntity.ok().body(sip.getBody());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateEntity(
-        @PathVariable String id, 
-        @RequestBody Map<String, Object> body, 
-        HttpServletRequest request) {
-            String owner = UserContext.getOwner(request);
-            SIP sip = sipService.save(owner, id, null, body);
-            return ResponseEntity.ok().body(sip.getBody());
+            @PathVariable String id, 
+            @RequestBody Map<String, Object> body) {
+        String owner = UserContext.getOwner();
+        SIP sip = sipService.save(owner, id, null, body);
+        return ResponseEntity.ok().body(sip.getBody());
     }
 
     @PutMapping("/{id}/invite-code")
     public ResponseEntity<Void> updateInviteCode(
-        @PathVariable String id, 
-        @RequestParam String inviteCode, 
-        HttpServletRequest request) {
-        String owner = UserContext.getOwner(request);
+            @PathVariable String id, 
+            @RequestParam String inviteCode) {
+        String owner = UserContext.getOwner();
         try {
             sipService.updateInvitationCode(owner, id, inviteCode);
             return ResponseEntity.noContent().build();
@@ -86,8 +82,9 @@ public class SIPController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEntity(@PathVariable String id, HttpServletRequest request) {
-        String owner = UserContext.getOwner(request);
+    public ResponseEntity<Void> deleteEntity(
+            @PathVariable String id) {
+        String owner = UserContext.getOwner();
         if (sipService.deleteById(owner, id)) {
             return ResponseEntity.noContent().build();
         }
