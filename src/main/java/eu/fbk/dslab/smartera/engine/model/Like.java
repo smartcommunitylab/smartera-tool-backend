@@ -11,6 +11,7 @@ public class Like {
     private String id;
     @Indexed
     private String owner;
+    private String name;
     private String sipId;
     private String componentId;
     private long timestamp;
@@ -18,15 +19,17 @@ public class Like {
     public Like() {
     }
 
-    public Like(String owner, String sipId, String componentId) {
+    public Like(String owner, String name, String sipId, String componentId) {
         this.owner = owner;
+        this.name = name;
         this.sipId = sipId;
         this.componentId = componentId;
         this.timestamp = System.currentTimeMillis();
     }
 
-    public Like(String owner, String sipId) {
+    public Like(String owner, String name, String sipId) {
         this.owner = owner;
+        this.name = name;
         this.sipId = sipId;
         this.timestamp = System.currentTimeMillis();
     }
@@ -69,5 +72,13 @@ public class Like {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

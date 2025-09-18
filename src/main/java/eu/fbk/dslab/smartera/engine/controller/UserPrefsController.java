@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import eu.fbk.dslab.smartera.engine.model.UserPrefs;
 import eu.fbk.dslab.smartera.engine.service.UserPrefsService;
 import eu.fbk.security.UserContext;
+import eu.fbk.security.UserInfo;
 
 @RestController
 @RequestMapping("/api/prefs")
@@ -23,8 +24,8 @@ public class UserPrefsController {
 
     @GetMapping("/my")
     public ResponseEntity<Map<String, Object>> getUserPrefs() {
-        String owner = UserContext.getOwner();
-        UserPrefs prefs = userPrefsService.findByOwner(owner);
+        UserInfo owner = UserContext.getOwner();
+        UserPrefs prefs = userPrefsService.findByOwner(owner.getEmail());
         if (prefs == null) {
             return ResponseEntity.notFound().build();
         }
@@ -34,15 +35,15 @@ public class UserPrefsController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> saveUserPrefs(
             @RequestBody Map<String, Object> body) {
-        String owner = UserContext.getOwner();
-        UserPrefs prefs = userPrefsService.save(owner, body);
+        UserInfo owner = UserContext.getOwner();
+        UserPrefs prefs = userPrefsService.save(owner.getEmail(), body);
         return ResponseEntity.ok().body(prefs.getBody());
     }
     
     @DeleteMapping
     public ResponseEntity<Void> deleteUserPrefs() {
-        String owner = UserContext.getOwner();
-        userPrefsService.deleteByOwner(owner);
+        UserInfo owner = UserContext.getOwner();
+        userPrefsService.deleteByOwner(owner.getEmail());
         return ResponseEntity.noContent().build();
     }
 }

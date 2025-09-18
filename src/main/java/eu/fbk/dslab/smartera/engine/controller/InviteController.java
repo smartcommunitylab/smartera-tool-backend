@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import eu.fbk.dslab.smartera.engine.model.Invite;
 import eu.fbk.dslab.smartera.engine.service.InviteService;
 import eu.fbk.security.UserContext;
+import eu.fbk.security.UserInfo;
 
 @RestController
 @RequestMapping("/api/invite")
@@ -25,25 +26,25 @@ public class InviteController {
 
     @GetMapping("/my")
     public ResponseEntity<List<Invite>> getMyInvites() {
-        String owner = UserContext.getOwner();
-        List<Invite> invites = inviteService.findByOwner(owner);
+        UserInfo owner = UserContext.getOwner();
+        List<Invite> invites = inviteService.findByOwner(owner.getEmail());
         return ResponseEntity.ok().body(invites);
     }
 
     @GetMapping("/sip/{id}")
     public ResponseEntity<List<Invite>> getSipInvites(
             @PathVariable String id) {
-        String owner = UserContext.getOwner();
-        List<Invite> invites = inviteService.findByOwnerAndSip(owner, id);
+        UserInfo owner = UserContext.getOwner();
+        List<Invite> invites = inviteService.findByOwnerAndSip(owner.getEmail(), id);
         return ResponseEntity.ok().body(invites);
     }
 
     @PutMapping("/accept")
     public ResponseEntity<Invite> acceptInvite(
             @RequestParam String inviteCode) {
-        String invitedUser = UserContext.getOwner();
+        UserInfo invitedUser = UserContext.getOwner();
         try {
-            Invite invite = inviteService.saveInvite(inviteCode, invitedUser);
+            Invite invite = inviteService.saveInvite(inviteCode, invitedUser.getEmail());
             return ResponseEntity.ok().body(invite);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -54,8 +55,8 @@ public class InviteController {
     public ResponseEntity<Void> deleteInvite(
             @RequestParam String sipId, 
             @RequestParam String invitedUser) {
-        String owner = UserContext.getOwner();
-        inviteService.deleteInvite(owner, sipId, invitedUser);
+        UserInfo owner = UserContext.getOwner();
+        inviteService.deleteInvite(owner.getEmail(), sipId, invitedUser);
         return ResponseEntity.noContent().build();
     }
 

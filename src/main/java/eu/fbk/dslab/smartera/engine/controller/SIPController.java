@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import eu.fbk.dslab.smartera.engine.model.SIP;
 import eu.fbk.dslab.smartera.engine.service.SIPService;
 import eu.fbk.security.UserContext;
+import eu.fbk.security.UserInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,8 @@ public class SIPController {
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getEntityById(
             @PathVariable String id) {
-        Optional<SIP> op = sipService.findById(UserContext.getOwner(), id);
+        UserInfo owner = UserContext.getOwner();
+        Optional<SIP> op = sipService.findById(owner.getEmail(), id);
         if (op.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -31,8 +33,8 @@ public class SIPController {
 
     @GetMapping("/my")
     public ResponseEntity<List<Map<String, Object>>> getByOwner() {
-        String owner = UserContext.getOwner();
-        List<SIP> sips = sipService.findByOwner(owner);
+        UserInfo owner = UserContext.getOwner();
+        List<SIP> sips = sipService.findByOwner(owner.getEmail());
         List<Map<String, Object>> response = sips.stream()
             .map(SIP::getBody)
             .toList();
@@ -41,8 +43,8 @@ public class SIPController {
 
     @GetMapping("/invited")
     public ResponseEntity<List<Map<String, Object>>> getByInvitedUser() {
-        String owner = UserContext.getOwner();
-        List<SIP> sips = sipService.findByInvitedUser(owner);
+        UserInfo owner = UserContext.getOwner();
+        List<SIP> sips = sipService.findByInvitedUser(owner.getEmail());
         List<Map<String, Object>> response = sips.stream()
             .map(SIP::getBody)
             .toList();
@@ -54,8 +56,8 @@ public class SIPController {
             @RequestParam String id,
             @RequestParam String inviteCode,
             @RequestBody Map<String, Object> body) {
-        String owner = UserContext.getOwner();
-        SIP sip = sipService.save(owner, id, inviteCode, body);
+        UserInfo owner = UserContext.getOwner();
+        SIP sip = sipService.save(owner.getEmail(), id, inviteCode, body);
         return ResponseEntity.ok().body(sip.getBody());
     }
 
@@ -63,8 +65,8 @@ public class SIPController {
     public ResponseEntity<Map<String, Object>> updateEntity(
             @PathVariable String id, 
             @RequestBody Map<String, Object> body) {
-        String owner = UserContext.getOwner();
-        SIP sip = sipService.save(owner, id, null, body);
+        UserInfo owner = UserContext.getOwner();
+        SIP sip = sipService.save(owner.getEmail(), id, null, body);
         return ResponseEntity.ok().body(sip.getBody());
     }
 
@@ -72,9 +74,9 @@ public class SIPController {
     public ResponseEntity<Void> updateInviteCode(
             @PathVariable String id, 
             @RequestParam String inviteCode) {
-        String owner = UserContext.getOwner();
+        UserInfo owner = UserContext.getOwner();
         try {
-            sipService.updateInvitationCode(owner, id, inviteCode);
+            sipService.updateInvitationCode(owner.getEmail(), id, inviteCode);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -84,8 +86,8 @@ public class SIPController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEntity(
             @PathVariable String id) {
-        String owner = UserContext.getOwner();
-        if (sipService.deleteById(owner, id)) {
+        UserInfo owner = UserContext.getOwner();
+        if (sipService.deleteById(owner.getEmail(), id)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

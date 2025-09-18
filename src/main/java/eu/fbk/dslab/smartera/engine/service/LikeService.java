@@ -12,6 +12,7 @@ import eu.fbk.dslab.smartera.engine.model.SIP;
 import eu.fbk.dslab.smartera.engine.repository.InviteRepository;
 import eu.fbk.dslab.smartera.engine.repository.LikeRepository;
 import eu.fbk.dslab.smartera.engine.repository.SIPRepository;
+import eu.fbk.security.UserInfo;
 
 @Service
 public class LikeService {
@@ -26,48 +27,48 @@ public class LikeService {
         this.sipRepository = sipRepository;
     }
     
-    public Like addSipLike(String owner, String sipId) throws IllegalArgumentException {
-        Invite existingInvite = inviteRepository.findBySipIdAndInvitedUser(sipId, owner);
+    public Like addSipLike(UserInfo owner, String sipId) throws IllegalArgumentException {
+        Invite existingInvite = inviteRepository.findBySipIdAndInvitedUser(sipId, owner.getEmail());
         if (existingInvite == null) {
             throw new IllegalArgumentException("You do not have permission to modify this entity.");
         }
-        Like existingLike = likeRepository.findOneByOwnerAndSipIdAndComponentIdNull(owner, sipId);
+        Like existingLike = likeRepository.findOneByOwnerAndSipIdAndComponentIdNull(owner.getEmail(), sipId);
         if (existingLike != null) {
             return existingLike; // Return existing like if it already exists
         }
-        Like like = new Like(owner, sipId);
+        Like like = new Like(owner.getEmail(), owner.getName(), sipId);
         likeRepository.save(like);
         return like;
     }
 
-    public Like addComponentLike(String owner, String sipId, String componentId) throws IllegalArgumentException {
-        Invite existingInvite = inviteRepository.findBySipIdAndInvitedUser(sipId, owner);
+    public Like addComponentLike(UserInfo owner, String sipId, String componentId) throws IllegalArgumentException {
+        Invite existingInvite = inviteRepository.findBySipIdAndInvitedUser(sipId, owner.getEmail());
         if (existingInvite == null) {
             throw new IllegalArgumentException("You do not have permission to modify this entity.");
         }
-        Like existingLike = likeRepository.findOneByOwnerAndSipIdAndComponentId(owner, sipId, componentId);
+        Like existingLike = likeRepository.findOneByOwnerAndSipIdAndComponentId(owner.getEmail(), sipId, componentId);
         if (existingLike != null) {
             return existingLike; // Return existing like if it already exists
         }
-        Like like = new Like(owner, sipId, componentId);
+        Like like = new Like(owner.getEmail(), owner.getName(), sipId, componentId);
         likeRepository.save(like);
         return like;
     }
 
-    public List<Like> getLikes(String owner, String sipId) throws IllegalArgumentException {
-        Invite existingInvite = inviteRepository.findBySipIdAndInvitedUser(sipId, owner);
+    public List<Like> getLikes(UserInfo owner, String sipId) throws IllegalArgumentException {
+        Invite existingInvite = inviteRepository.findBySipIdAndInvitedUser(sipId, owner.getEmail());
         if (existingInvite == null) {
             throw new IllegalArgumentException("You do not have permission to modify this entity.");
         }
-        return likeRepository.findByOwnerAndSipId(owner, sipId);
+        return likeRepository.findByOwnerAndSipId(owner.getEmail(), sipId);
     }
 
-    public List<Like> getLikesBySIPOwner(String owner, String sipId) throws IllegalArgumentException {
+    public List<Like> getLikesBySIPOwner(UserInfo owner, String sipId) throws IllegalArgumentException {
         SIP sip = sipRepository.findById(sipId).orElse(null); 
         if (sip == null) {
             throw new IllegalArgumentException("SIP not found");
         }
-        if (!StringUtils.equals(sip.getOwner(), owner)) {
+        if (!StringUtils.equals(sip.getOwner(), owner.getEmail())) {
             throw new IllegalArgumentException("You do not have permission to view likes for this SIP.");
         }
         return likeRepository.findBySipId(sipId);
