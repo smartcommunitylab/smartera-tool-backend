@@ -38,6 +38,10 @@ public class SIPService {
         return sipRepository.findAllById(ids);
     }
 
+    public List<SIP> findPublished() {
+        return sipRepository.findByPublished(true);
+    }
+
     public Optional<SIP> findById(String owner, String id) {
         SIP sip = sipRepository.findById(id).orElse(null);
         if (sip != null && !sip.getOwner().equals(owner)) {
@@ -68,6 +72,18 @@ public class SIPService {
             throw new IllegalArgumentException("SIP entity not found.");
         }
         sip.setInviteCode(inviteCode);
+        return sipRepository.save(sip);
+    }
+
+    public SIP publishSIP(String owner, String id, boolean published) throws IllegalArgumentException {
+        SIP sip = sipRepository.findById(id).orElse(null);
+        if (sip != null && !sip.getOwner().equals(owner)) {
+            throw new IllegalArgumentException("You do not have permission to modify this entity.");
+        }
+        if (sip == null) {
+            throw new IllegalArgumentException("SIP entity not found.");
+        }
+        sip.setPublished(published);
         return sipRepository.save(sip);
     }
 

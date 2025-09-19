@@ -15,9 +15,9 @@ public class SIP {
     private String owner;
     private String inviteCode;
     private Map<String, Object> body;
+    private boolean published = false;
 
-    public SIP() {
-    }
+    public SIP() {}
 
     public SIP(String id, String owner, String inviteCode, Map<String, Object> body) {
         this.id = id;
@@ -57,4 +57,13 @@ public class SIP {
     public void setInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
     }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
 }

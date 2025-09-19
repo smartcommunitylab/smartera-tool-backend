@@ -11,4 +11,5 @@ public interface SIPRepository extends MongoRepository<SIP, String> {
     // Custom query methods can be defined here if needed
     List<SIP> findByOwner(String owner);
     SIP findOneByInviteCode(String inviteCode);
+    List<SIP> findByPublished(boolean b);
 }

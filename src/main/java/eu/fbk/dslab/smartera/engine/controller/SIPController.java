@@ -51,6 +51,15 @@ public class SIPController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/published")
+    public ResponseEntity<List<Map<String, Object>>> getPublished() {
+        List<SIP> sips = sipService.findPublished();
+        List<Map<String, Object>> response = sips.stream()
+            .map(SIP::getBody)
+            .toList();
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping
     public ResponseEntity<Map<String, Object>> createEntity(
             @RequestParam String id,
@@ -77,6 +86,19 @@ public class SIPController {
         UserInfo owner = UserContext.getOwner();
         try {
             sipService.updateInvitationCode(owner.getEmail(), id, inviteCode);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}/publish")
+    public ResponseEntity<Void> publishEntity(
+            @PathVariable String id, 
+            @RequestParam boolean published) {
+        UserInfo owner = UserContext.getOwner();
+        try {
+            sipService.publishSIP(owner.getEmail(), id, published);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
