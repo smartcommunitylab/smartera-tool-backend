@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.fbk.dslab.smartera.engine.model.UserPrefs;
+import eu.fbk.dslab.smartera.engine.security.UserContext;
+import eu.fbk.dslab.smartera.engine.security.UserInfo;
 import eu.fbk.dslab.smartera.engine.service.UserPrefsService;
-import eu.fbk.security.UserContext;
-import eu.fbk.security.UserInfo;
 
 @RestController
 @RequestMapping("/api/prefs")

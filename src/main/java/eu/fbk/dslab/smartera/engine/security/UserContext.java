@@ -1,4 +1,4 @@
-package eu.fbk.security;
+package eu.fbk.dslab.smartera.engine.security;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;

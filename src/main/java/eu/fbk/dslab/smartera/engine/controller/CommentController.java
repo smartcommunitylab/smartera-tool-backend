@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import eu.fbk.dslab.smartera.engine.model.Comment;
+import eu.fbk.dslab.smartera.engine.security.UserContext;
+import eu.fbk.dslab.smartera.engine.security.UserInfo;
 import eu.fbk.dslab.smartera.engine.service.CommentService;
-import eu.fbk.security.UserContext;
-import eu.fbk.security.UserInfo;
 
 @RestController
 @RequestMapping("/api/comment")

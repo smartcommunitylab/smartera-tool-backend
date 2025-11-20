@@ -12,7 +12,7 @@ import eu.fbk.dslab.smartera.engine.model.SIP;
 import eu.fbk.dslab.smartera.engine.repository.InviteRepository;
 import eu.fbk.dslab.smartera.engine.repository.LikeRepository;
 import eu.fbk.dslab.smartera.engine.repository.SIPRepository;
-import eu.fbk.security.UserInfo;
+import eu.fbk.dslab.smartera.engine.security.UserInfo;
 
 @Service
 public class LikeService {

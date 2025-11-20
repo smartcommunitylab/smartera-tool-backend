@@ -1,4 +1,4 @@
-package eu.fbk.security;
+package eu.fbk.dslab.smartera.engine.security;
 
 public class UserInfo {
     private String email;

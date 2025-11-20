@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import eu.fbk.dslab.smartera.engine.model.SIP;
+import eu.fbk.dslab.smartera.engine.security.UserContext;
+import eu.fbk.dslab.smartera.engine.security.UserInfo;
 import eu.fbk.dslab.smartera.engine.service.SIPService;
-import eu.fbk.security.UserContext;
-import eu.fbk.security.UserInfo;
 
 import java.util.List;
 import java.util.Map;

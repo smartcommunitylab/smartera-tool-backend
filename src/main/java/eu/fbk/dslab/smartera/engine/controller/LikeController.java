@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.fbk.dslab.smartera.engine.model.Like;
+import eu.fbk.dslab.smartera.engine.security.UserContext;
+import eu.fbk.dslab.smartera.engine.security.UserInfo;
 import eu.fbk.dslab.smartera.engine.service.LikeService;
-import eu.fbk.security.UserContext;
-import eu.fbk.security.UserInfo;
 
 @RestController
 @RequestMapping("/api/like")
