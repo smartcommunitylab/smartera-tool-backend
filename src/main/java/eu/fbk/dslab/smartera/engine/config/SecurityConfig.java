@@ -16,9 +16,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
             )
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
-            //.csrf(csrf -> csrf.disable())
-            //.cors(cors -> cors.disable());
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+            .cors(Customizer.withDefaults());
         return http.build();
     }
 }
