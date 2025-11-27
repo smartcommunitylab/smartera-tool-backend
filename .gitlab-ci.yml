@@ -57,7 +57,7 @@ deploy-prod:
     name: dslab
   script:
     - echo "deploy backend"
-    - kubectl -n playngo-prod set image deployments/smartera-backend smartera-backend=$CONTAINER_IMAGE --record=true
-    - kubectl -n playngo-prod rollout status deployment smartera-backend
+    - kubectl -n smartera set image deployments/smartera-backend smartera-backend=$CONTAINER_IMAGE --record=true
+    - kubectl -n smartera rollout status deployment smartera-backend
   only:
     - prod
